@@ -53,10 +53,11 @@ public class MatrixCalculator {
 
 
     /*
-    The functionality of this method is to multiply the given matrix with the given
-    constant and print the results on the screen
+    The functionality of this method is to perform the basic mathematical operations
+    on a single matrix. The function takes a matrix and an integer value from the user
+    and performs the desired operation on them
      */
-    public void multiplyMatrixWithConstant() {
+    public void performBasicMathOperationWithConstant(Operations operation) {
         Matrix firstMatrix = getSingleMatrix();
         if (firstMatrix == null) {
             return;
@@ -64,36 +65,10 @@ public class MatrixCalculator {
         if (!firstMatrix.containsValues) {
             firstMatrix.setMatrixValues();
         }//end if
-        int constantValue = getNumber("\nPlease enter the number you want the matrix to be multiplied with:\t");
+        int constantValue = getNumber("\nPlease enter the constant number:\t");
         for (int i = 0; i < firstMatrix.rows; i++) {
             for (int j = 0; j < firstMatrix.columns; j++) {
-                firstMatrix.matrix[i][j] *= constantValue;
-            }//end of for loop
-        }//end of for loop
-        System.out.println("Resulting matrix is: ");
-        firstMatrix.printMatrix();
-    }
-
-    /*
-    The functionality of this method is to divide the given matrix with the given
-    constant and print the results on the screen
-     */
-    public void divideMatrixWithConstant() {
-        Matrix firstMatrix = getSingleMatrix();
-        if (firstMatrix == null) {
-            return;
-        }//end if
-        if (!firstMatrix.containsValues) {
-            firstMatrix.setMatrixValues();
-        }//end if
-        int constantValue = getNumber("\nPlease enter the number you want the matrix to be divided with:\t");
-        if (constantValue == 0) {
-            System.out.println("Error! Division is not possible when the denominator is 0");
-            return;
-        }//end if
-        for (int i = 0; i < firstMatrix.rows; i++) {
-            for (int j = 0; j < firstMatrix.columns; j++) {
-                firstMatrix.matrix[i][j] = firstMatrix.matrix[i][j] / constantValue;
+                firstMatrix.matrix[i][j] = performOperation(firstMatrix.matrix[i][j], constantValue, operation);
             }//end of for loop
         }//end of for loop
         System.out.println("Resulting matrix is: ");
@@ -277,13 +252,28 @@ public class MatrixCalculator {
    -------------------------------------------------------------------------------
     */
 
+    /*
+    The following function takes two numbers and operation as a parameter, performs the
+    desired operation and returns the result of that calculation
+     */
+    private int performOperation(int number1, int number2, Operations operation) {
+        if (operation == Operations.ADDITION) {
+            return number1 + number2;
+        } else if (operation == Operations.SUBTRACTION) {
+            return number1 - number2;
+        } else if (operation == Operations.MULTIPLICATION) {
+            return number1 * number2;
+        }//end if else
+        return number1 / number2;
+    }
+
     private Matrix performBasicOperation(Operations operation) {
         switch (operation) {
-            case addition:
+            case ADDITION:
                 return addMatrices(firstMatrix, secondMatrix);
-            case subtraction:
+            case SUBTRACTION:
                 return subtractMatrices(firstMatrix, secondMatrix);
-            case multiplication:
+            case MULTIPLICATION:
                 return multiplyMatrices(firstMatrix, secondMatrix);
         }
         return null;
@@ -455,7 +445,8 @@ public class MatrixCalculator {
 }
 
 enum Operations {
-    addition,
-    subtraction,
-    multiplication,
+    ADDITION,
+    SUBTRACTION,
+    MULTIPLICATION,
+    DIVISION
 }
